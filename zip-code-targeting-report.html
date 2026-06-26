@@ -1,0 +1,1812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Farrington Insurance Agency &mdash; Zip Code Targeting Strategy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+
+    :root {
+        --goal-brand: #077BE5;
+        --goal-dark-blue: #00172D;
+        --goal-accent-1: #3AEECA;
+        --goal-accent-2: #97C2E8;
+        --goal-accent-3: #9FDACD;
+        --goal-light-grey: #F8F9FC;
+        --goal-text: #001020;
+        --success: #10B981;
+        --warn: #F59E0B;
+        --danger: #EF4444;
+        --border: #E5E7EB;
+        --muted: #6B7280;
+        --tier-best-bg: #DCFCE7;
+        --tier-mid-bg: #ECFDF5;
+        --tier-excl-bg: #FEF2F2;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; scroll-padding-top: 20px; }
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+        color: var(--goal-text);
+        background: var(--goal-light-grey);
+        line-height: 1.5;
+        padding: 40px 20px;
+    }
+    .container { max-width: 1200px; margin: 0 auto; }
+    header {
+        background: linear-gradient(135deg, #00172D 0%, #077BE5 100%);
+        color: white;
+        padding: 40px 48px;
+        border-radius: 12px;
+        margin-bottom: 16px;
+    }
+    .header-title { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+    .header-sub { font-size: 16px; opacity: 0.9; }
+    .header-meta { margin-top: 16px; font-size: 13px; opacity: 0.7; }
+
+    .quicknav-wrap {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: saturate(180%) blur(12px);
+        -webkit-backdrop-filter: saturate(180%) blur(12px);
+        border: 1px solid var(--goal-brand);
+        border-radius: 10px;
+        margin-bottom: 24px;
+        position: sticky;
+        top: 10px;
+        z-index: 50;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+        overflow: hidden;
+    }
+    .quicknav-label {
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        color: var(--goal-brand);
+        padding: 6px 16px;
+        background: rgba(248, 249, 252, 0.75);
+        border-bottom: 1px solid var(--goal-brand);
+    }
+    .quicknav {
+        padding: 10px 16px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        background: transparent;
+    }
+    .quicknav a {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--muted);
+        text-decoration: none;
+        padding: 6px 12px;
+        border-radius: 6px;
+        transition: all 0.15s;
+    }
+    .quicknav a:hover { background: var(--goal-light-grey); color: var(--goal-brand); }
+
+    section { background: white; border: 1px solid var(--border); border-radius: 12px; padding: 32px; margin-bottom: 24px; scroll-margin-top: 70px; }
+    h2 { font-size: 22px; font-weight: 700; color: var(--goal-dark-blue); margin-bottom: 8px; }
+    h2 .subtle { font-size: 14px; color: var(--muted); font-weight: 500; margin-left: 12px; }
+    h3 { font-size: 17px; font-weight: 700; color: var(--goal-dark-blue); }
+    .section-intro { color: var(--muted); font-size: 14px; margin-bottom: 24px; max-width: 780px; }
+
+    .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 16px; }
+    .kpi { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 20px; }
+    .kpi-num { font-size: 32px; font-weight: 700; color: var(--goal-brand); margin-bottom: 4px; }
+    .kpi-lbl { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+    .kpi.success .kpi-num { color: var(--success); }
+
+    .strategy-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 20px; }
+    .strategy-card { padding: 20px; border-radius: 10px; border: 1px solid var(--border); }
+    .strategy-card.best { background: var(--tier-best-bg); border-color: var(--success); }
+    .strategy-card.mid { background: var(--tier-mid-bg); border-color: var(--goal-accent-3); }
+    .strategy-card.exclude { background: var(--tier-excl-bg); border-color: var(--danger); }
+    .strategy-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+    .strategy-card.best .strategy-label, .strategy-card.mid .strategy-label { color: #047857; }
+    .strategy-card.exclude .strategy-label { color: #B91C1C; }
+    .strategy-num { font-size: 28px; font-weight: 800; color: var(--goal-dark-blue); margin-bottom: 4px; }
+    .strategy-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
+    .strategy-modifier { display: inline-block; margin-top: 8px; padding: 3px 10px; background: white; border-radius: 12px; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; border: 1px solid var(--border); }
+
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    th { background: #F8F9FC; text-align: left; padding: 12px 14px; font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); }
+    td { padding: 12px 14px; border-bottom: 1px solid var(--border); font-size: 14px; }
+    td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+    .county-name { font-weight: 600; color: var(--goal-dark-blue); }
+    .zip-monospace { font-family: 'SF Mono', Menlo, Monaco, Consolas, monospace; font-weight: 600; color: var(--goal-brand); }
+
+    .county-group { margin-bottom: 32px; }
+    .county-header { margin-bottom: 14px; padding-bottom: 10px; border-bottom: 2px solid var(--border); }
+    .county-count { font-size: 13px; font-weight: 500; color: var(--muted); margin-left: 10px; }
+    .zip-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+    .zip-card { background: white; border: 1px solid var(--border); border-left: 4px solid var(--success); border-radius: 8px; padding: 14px 16px; position: relative; }
+    .zip-code { font-family: 'SF Mono', Menlo, Monaco, Consolas, monospace; font-size: 22px; font-weight: 700; color: var(--goal-dark-blue); }
+    .zip-county { font-size: 12px; color: var(--muted); margin-bottom: 10px; }
+    .zip-stats { display: flex; gap: 12px; margin-top: 8px; }
+    .stat { display: flex; flex-direction: column; }
+    .stat-num { font-size: 16px; font-weight: 700; line-height: 1.1; }
+    .stat-lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.3px; margin-top: 2px; }
+    .target-badge { position: absolute; top: 10px; right: 10px; background: var(--tier-best-bg); color: #047857; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; letter-spacing: 0.3px; }
+
+    .mid-row {
+        display: grid;
+        grid-template-columns: 200px 1fr;
+        gap: 16px;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid var(--border);
+    }
+    .mid-row:last-child { border-bottom: none; }
+    .mid-county { display: flex; flex-direction: column; gap: 2px; }
+    .mid-county-name { font-weight: 700; font-size: 14px; color: var(--goal-dark-blue); }
+    .mid-county-stats { font-size: 11px; color: var(--muted); }
+    .mid-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+    .pill {
+        display: inline-flex;
+        align-items: center;
+        background: var(--tier-mid-bg);
+        border: 1px solid var(--goal-accent-3);
+        border-radius: 6px;
+        font-family: 'SF Mono', Menlo, Monaco, Consolas, monospace;
+        font-size: 12px;
+        overflow: hidden;
+    }
+    .pill-zip { padding: 4px 8px; font-weight: 700; color: var(--goal-dark-blue); }
+    .pill-sold { padding: 4px 8px; background: var(--success); color: white; font-weight: 700; }
+    .pill-excl { background: var(--tier-excl-bg); border-color: #FCA5A5; }
+    .pill-opps { padding: 4px 8px; background: var(--danger); color: white; font-weight: 700; }
+
+    .tier-badge { display: inline-block; padding: 3px 10px; border-radius: 10px; font-size: 11px; font-weight: 700; letter-spacing: 0.3px; }
+    .tier-best { background: var(--tier-best-bg); color: #047857; border: 1px solid var(--success); }
+    .tier-mid { background: var(--tier-mid-bg); color: #047857; border: 1px solid var(--goal-accent-3); }
+    .tier-new { background: #FEF3C7; color: #92400E; border: 1px solid var(--warn); }
+    .tier-low { background: var(--tier-excl-bg); color: #B91C1C; border: 1px solid var(--danger); }
+
+    .legend { display: flex; gap: 18px; margin-top: 12px; font-size: 12px; color: var(--muted); flex-wrap: wrap; }
+    .legend-item { display: flex; align-items: center; gap: 6px; }
+    .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+    #backtotop {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        width: 44px;
+        height: 44px;
+        background: var(--goal-brand);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        box-shadow: 0 4px 12px rgba(7, 123, 229, 0.35);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s, transform 0.2s;
+        z-index: 100;
+        font-size: 20px;
+        font-weight: 700;
+    }
+    #backtotop.visible { opacity: 1; pointer-events: auto; }
+    #backtotop:hover { transform: translateY(-2px); }
+
+    footer { text-align: center; padding: 24px; color: var(--muted); font-size: 12px; }
+    footer strong { color: var(--goal-brand); }
+
+    @media (max-width: 768px) {
+        .kpi-grid, .strategy-grid { grid-template-columns: 1fr 1fr; }
+        .zip-grid { grid-template-columns: 1fr 1fr; }
+        .mid-row { grid-template-columns: 1fr; }
+        header { padding: 28px 24px; }
+        section { padding: 24px 20px; }
+    }
+
+    /* ---------- PRINT / PDF ---------- */
+    @page {
+        size: letter;
+        margin: 0.5in 0.5in 0.6in 0.5in;
+    }
+    @media print {
+        html, body {
+            background: white !important;
+            color: #000 !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            font-size: 10.5pt;
+            line-height: 1.35;
+        }
+        .container { max-width: 100% !important; margin: 0 !important; padding: 0 !important; }
+
+        /* Hide interactive chrome that makes no sense on paper. */
+        #backtotop, .quicknav-wrap { display: none !important; }
+
+        /* Keep the brand header but flatten gradient for ink efficiency. */
+        header {
+            background: var(--goal-dark-blue) !important;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+            padding: 18pt 24pt !important;
+            margin-bottom: 10pt !important;
+            border-radius: 6pt !important;
+            page-break-after: avoid;
+        }
+        .header-title { font-size: 18pt !important; margin-bottom: 3pt !important; }
+        .header-sub { font-size: 11pt !important; }
+        .header-meta { margin-top: 8pt !important; font-size: 9pt !important; }
+
+        /* Force colored backgrounds + borders to print. */
+        * {
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+
+        section {
+            border: 1px solid #CBD5E1 !important;
+            border-radius: 6pt !important;
+            padding: 14pt 16pt !important;
+            margin-bottom: 10pt !important;
+            box-shadow: none !important;
+            page-break-inside: avoid;
+            break-inside: avoid;
+        }
+        h2 { font-size: 13pt !important; margin-bottom: 4pt !important; }
+        h2 .subtle { font-size: 9pt !important; margin-left: 6pt !important; display: inline !important; }
+        h3, .county-header { font-size: 11pt !important; page-break-after: avoid; }
+        .section-intro { font-size: 9.5pt !important; margin-bottom: 10pt !important; max-width: 100% !important; }
+
+        /* KPI + strategy grids compress cleanly. */
+        .kpi-grid { gap: 8pt !important; margin-bottom: 8pt !important; }
+        .kpi { padding: 10pt !important; break-inside: avoid; }
+        .kpi-num { font-size: 20pt !important; }
+        .kpi-lbl { font-size: 8pt !important; }
+
+        .strategy-grid { gap: 8pt !important; margin-top: 10pt !important; }
+        .strategy-card { padding: 12pt !important; break-inside: avoid; }
+        .strategy-num { font-size: 18pt !important; }
+        .strategy-desc { font-size: 9pt !important; }
+        .strategy-modifier { font-size: 8pt !important; }
+
+        /* Tables: keep rows together, shrink padding. */
+        table { font-size: 9pt !important; page-break-inside: auto; }
+        thead { display: table-header-group; }
+        tr { page-break-inside: avoid; break-inside: avoid; }
+        th, td { padding: 5pt 7pt !important; font-size: 9pt !important; }
+        th { background: #EEF2F7 !important; }
+
+        /* Complete Target List: un-scroll it and let it flow across pages. */
+        #targets > div[style*="overflow-y"] {
+            max-height: none !important;
+            overflow: visible !important;
+            border: 1px solid #CBD5E1 !important;
+        }
+
+        /* Zip cards: break cleanly, no shadows. */
+        .county-group { break-inside: avoid; margin-bottom: 14pt !important; }
+        .zip-grid { gap: 6pt !important; grid-template-columns: repeat(4, 1fr) !important; }
+        .zip-card {
+            padding: 8pt 10pt !important;
+            break-inside: avoid;
+            box-shadow: none !important;
+        }
+        .zip-code { font-size: 14pt !important; }
+        .zip-county { font-size: 8.5pt !important; margin-bottom: 4pt !important; }
+        .zip-stats { gap: 8pt !important; margin-top: 4pt !important; }
+        .stat-num { font-size: 11pt !important; }
+        .stat-lbl { font-size: 7.5pt !important; }
+        .target-badge { font-size: 7pt !important; padding: 1pt 6pt !important; }
+
+        /* Mid / Exclude pills compress. */
+        .mid-row { grid-template-columns: 160px 1fr !important; padding: 6pt 0 !important; break-inside: avoid; }
+        .mid-county-name { font-size: 10pt !important; }
+        .mid-county-stats { font-size: 8pt !important; }
+        .pill { font-size: 9pt !important; }
+        .pill-zip, .pill-sold, .pill-opps { padding: 2pt 5pt !important; }
+
+        .tier-badge { font-size: 8pt !important; padding: 1pt 6pt !important; }
+
+        .legend { font-size: 8.5pt !important; gap: 10pt !important; margin-top: 6pt !important; }
+
+        footer { padding: 10pt !important; font-size: 8pt !important; page-break-before: avoid; }
+
+        /* Force new page before the full target list — it's the long tail. */
+        #targets { page-break-before: always; }
+
+        a { color: inherit !important; text-decoration: none !important; }
+    }
+    /* Back-to-reports button */
+    .back-to-reports { position: fixed; top: 20px; left: 20px; z-index: 1000; display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; background: rgba(255,255,255,.95); color: var(--goal-dark-blue); border: 1px solid var(--border); border-radius: 999px; font-size: 13px; font-weight: 600; text-decoration: none; box-shadow: 0 4px 12px rgba(0,23,45,.1), 0 2px 4px rgba(0,23,45,.06); backdrop-filter: saturate(180%) blur(8px); -webkit-backdrop-filter: saturate(180%) blur(8px); transition: transform .15s ease, background .15s ease; }
+    .back-to-reports:hover { background: #fff; transform: translateX(-2px); }
+    .back-to-reports svg { width: 14px; height: 14px; }
+    @media print { .back-to-reports { display: none !important; } }
+
+
+/* ===== Structured Dashboard shell (refresh) ===== */
+body{font-family:'Inter',system-ui,sans-serif !important;background:#EFF2F7 !important;color:#2B3442;line-height:1.55;padding:0 !important;}
+.shell{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:288px 1fr;min-height:100vh;background:#fff;}
+.side{background:#00172D;color:#cfe0ee;padding:34px 30px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;}
+.side .logo{height:30px;align-self:flex-start;margin-bottom:34px;}
+.side .back{font-size:12px;color:#7fa3c4;text-decoration:none;margin-bottom:22px;display:inline-flex;gap:6px;}
+.side .back:hover{color:#fff;}
+.side .eb{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#2D90EE;}
+.side h1{font-size:26px;font-weight:900;color:#fff;line-height:1.08;letter-spacing:-.02em;margin:10px 0 14px;}
+.side .who{font-size:13px;color:#a7c2da;line-height:1.6;}
+.side .who b{color:#fff;font-weight:600;}
+.side nav{margin-top:34px;display:flex;flex-direction:column;gap:2px;}
+.side nav a{font-size:13.5px;color:#9fbcd6;text-decoration:none;padding:9px 12px;border-radius:8px;display:flex;align-items:center;gap:11px;transition:background .15s,color .15s;}
+.side nav a:hover{background:rgba(255,255,255,.06);color:#fff;}
+.side nav a .dot{width:6px;height:6px;border-radius:50%;background:#3a6386;flex-shrink:0;}
+.side nav a:hover .dot{background:#3BEECA;}
+.side .foot{margin-top:auto;padding-top:24px;border-top:1px solid rgba(255,255,255,.12);font-size:11px;color:#6f93b3;line-height:1.6;}
+.main{padding:44px 50px 64px;min-width:0;}
+.main section{margin-bottom:42px;scroll-margin-top:24px;}
+.main section > h2{font-size:22px;font-weight:800;color:#0F1B2D;letter-spacing:-.01em;margin-bottom:4px;}
+.main section > h2 .subtle{display:block;font-size:13.5px;font-weight:500;color:#6A7482;letter-spacing:0;margin-top:4px;text-transform:none;}
+.main table{font-size:13px;}
+@media print{
+  body{background:#fff !important;}
+  .shell{display:block;max-width:none;}
+  .side{position:static;height:auto;flex-direction:row;align-items:center;justify-content:space-between;padding:18px 28px;}
+  .side nav,.side .foot,.side .back{display:none;} .side h1{margin:0;font-size:20px;}
+  .main{padding:24px 26px;}
+}
+@media(max-width:980px){
+  .shell{grid-template-columns:1fr;}
+  .side{position:static;height:auto;}
+  .side nav{display:none;}
+  .main{padding:30px 22px;}
+}
+
+</style>
+</head>
+<body>
+<div class="shell" data-screen-label="Zip targeting strategy">
+  <aside class="side">
+    <svg class="logo" viewBox="0 0 132 34" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="GOAL">
+      <circle cx="17" cy="17" r="14" stroke="#fff" stroke-width="2.4"/>
+      <circle cx="17" cy="17" r="8" stroke="#3BEECA" stroke-width="2.4"/>
+      <circle cx="17" cy="17" r="2.6" fill="#fff"/>
+      <text x="40" y="24" font-family="Inter, sans-serif" font-weight="900" font-size="23" letter-spacing="1.5" fill="#fff">GOAL</text>
+    </svg>
+    <a class="back" href="/index.html">&larr; All reports</a>
+    <div class="eb">Targeting Strategy</div>
+    <h1>Farrington Insurance Agency</h1>
+    <div class="who">Prepared for <b>Javed Ansari</b><br>San Jose, CA<br>California Auto<br>Updated June 26, 2026</div>
+    <nav>
+      <a href="#strategy"><span class="dot"></span>Strategy</a>
+      <a href="#summary"><span class="dot"></span>Summary</a>
+      <a href="#counties"><span class="dot"></span>Counties</a>
+      <a href="#best"><span class="dot"></span>Best tier</a>
+      <a href="#mid"><span class="dot"></span>Mid tier</a>
+      <a href="#exclude"><span class="dot"></span>Exclude</a>
+      <a href="#targets"><span class="dot"></span>Target list</a>
+    </nav>
+    <div class="foot">GOAL Performance Marketing<br>Tiers built from closed-policy history.<br>Prepared by Tom Panos.</div>
+  </aside>
+  <main class="main">
+<section id="strategy">
+    <h2>The Strategy <span class="subtle">Concentrate budget where you've already won</span></h2>
+    <p class="section-intro">
+        Three tiers, built from your closed-policy history ("Quote Sold" status in the source sheet). <strong>3+ Quote Sold = Best.</strong> Bid aggressively on winners, moderately on emerging zips, exclude the rest.
+    </p>
+    <div class="strategy-grid">
+        <div class="strategy-card best">
+            <div class="strategy-label">Best Performance Tier</div>
+            <div class="strategy-num">22 zips</div>
+            <div class="strategy-desc"><strong>3+ Quote Sold.</strong> Proven winners across 14 counties.</div>
+            <span class="strategy-modifier">Bid modifier: 150–175%</span>
+        </div>
+        <div class="strategy-card mid">
+            <div class="strategy-label">Mid-Range Tier</div>
+            <div class="strategy-num">72 zips</div>
+            <div class="strategy-desc"><strong>1–2 Quote Sold.</strong> Positive signal, not yet proven.</div>
+            <span class="strategy-modifier">Bid modifier: 125%</span>
+        </div>
+        <div class="strategy-card exclude">
+            <div class="strategy-label">Exclude</div>
+            <div class="strategy-num">24 zips</div>
+            <div class="strategy-desc"><strong>3+ opportunities, 0 Quote Sold.</strong> Proven not to convert.</div>
+            <span class="strategy-modifier">Filtered out of targeting</span>
+        </div>
+    </div>
+</section>
+
+<section id="summary">
+    <h2>Performance Summary</h2>
+    <div class="kpi-grid">
+        <div class="kpi success"><div class="kpi-num">219</div><div class="kpi-lbl">Total Quote Sold</div></div>
+        <div class="kpi"><div class="kpi-num">14</div><div class="kpi-lbl">Counties w/ 3+ Quote Sold</div></div>
+        <div class="kpi"><div class="kpi-num">22</div><div class="kpi-lbl">Top Zip Codes</div></div>
+        <div class="kpi"><div class="kpi-num">93</div><div class="kpi-lbl">Zip Codes Targeted</div></div>
+    </div>
+</section>
+
+<section id="counties">
+    <h2>Counties Ranked by Sales <span class="subtle">Where your Allstate offer converts</span></h2>
+    <p class="section-intro">
+        Santa Clara drives <strong>139 of 219 Quote Sold records</strong>. 13 other counties clear the 3 Quote Sold threshold — led by Alameda, Los Angeles, and Santa Cruz.
+    </p>
+    <table>
+        <thead>
+            <tr>
+                <th>County</th><th class="num">Quote Sold</th><th class="num">Quote Lost</th><th class="num">Quoted with Contact</th>
+                <th class="num">Win Rate*</th><th class="num">Best Zips</th><th class="num">Mid Zips</th>
+            </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td class="county-name">Santa Clara</td>
+            <td class="num"><strong style="color: #10B981;">139</strong></td>
+            <td class="num">251</td>
+            <td class="num">83</td>
+            <td class="num"><strong>36%</strong></td>
+            <td class="num">19</td>
+            <td class="num">13</td>
+        </tr>
+        <tr>
+            <td class="county-name">Alameda</td>
+            <td class="num"><strong style="color: #10B981;">12</strong></td>
+            <td class="num">43</td>
+            <td class="num">12</td>
+            <td class="num"><strong>22%</strong></td>
+            <td class="num">0</td>
+            <td class="num">8</td>
+        </tr>
+        <tr>
+            <td class="county-name">Los Angeles</td>
+            <td class="num"><strong style="color: #10B981;">9</strong></td>
+            <td class="num">48</td>
+            <td class="num">31</td>
+            <td class="num"><strong>16%</strong></td>
+            <td class="num">0</td>
+            <td class="num">6</td>
+        </tr>
+        <tr>
+            <td class="county-name">Santa Cruz</td>
+            <td class="num"><strong style="color: #10B981;">9</strong></td>
+            <td class="num">16</td>
+            <td class="num">2</td>
+            <td class="num"><strong>36%</strong></td>
+            <td class="num">2</td>
+            <td class="num">3</td>
+        </tr>
+        <tr>
+            <td class="county-name">San Mateo</td>
+            <td class="num"><strong style="color: #10B981;">6</strong></td>
+            <td class="num">6</td>
+            <td class="num">2</td>
+            <td class="num"><strong>50%</strong></td>
+            <td class="num">1</td>
+            <td class="num">3</td>
+        </tr>
+        <tr>
+            <td class="county-name">Orange</td>
+            <td class="num"><strong style="color: #10B981;">4</strong></td>
+            <td class="num">17</td>
+            <td class="num">4</td>
+            <td class="num"><strong>19%</strong></td>
+            <td class="num">0</td>
+            <td class="num">4</td>
+        </tr>
+        <tr>
+            <td class="county-name">Contra Costa</td>
+            <td class="num"><strong style="color: #10B981;">3</strong></td>
+            <td class="num">18</td>
+            <td class="num">5</td>
+            <td class="num"><strong>14%</strong></td>
+            <td class="num">0</td>
+            <td class="num">2</td>
+        </tr>
+        <tr>
+            <td class="county-name">Riverside</td>
+            <td class="num"><strong style="color: #10B981;">3</strong></td>
+            <td class="num">12</td>
+            <td class="num">2</td>
+            <td class="num"><strong>20%</strong></td>
+            <td class="num">0</td>
+            <td class="num">2</td>
+        </tr>
+        <tr>
+            <td class="county-name">Sacramento</td>
+            <td class="num"><strong style="color: #10B981;">3</strong></td>
+            <td class="num">11</td>
+            <td class="num">1</td>
+            <td class="num"><strong>21%</strong></td>
+            <td class="num">0</td>
+            <td class="num">3</td>
+        </tr>
+        <tr>
+            <td class="county-name">San Bernardino</td>
+            <td class="num"><strong style="color: #10B981;">3</strong></td>
+            <td class="num">24</td>
+            <td class="num">7</td>
+            <td class="num"><strong>11%</strong></td>
+            <td class="num">0</td>
+            <td class="num">2</td>
+        </tr>
+        <tr>
+            <td class="county-name">San Diego</td>
+            <td class="num"><strong style="color: #10B981;">3</strong></td>
+            <td class="num">18</td>
+            <td class="num">3</td>
+            <td class="num"><strong>14%</strong></td>
+            <td class="num">0</td>
+            <td class="num">3</td>
+        </tr>
+        <tr>
+            <td class="county-name">San Francisco</td>
+            <td class="num"><strong style="color: #10B981;">3</strong></td>
+            <td class="num">4</td>
+            <td class="num">2</td>
+            <td class="num"><strong>43%</strong></td>
+            <td class="num">0</td>
+            <td class="num">3</td>
+        </tr>
+        <tr>
+            <td class="county-name">San Joaquin</td>
+            <td class="num"><strong style="color: #10B981;">3</strong></td>
+            <td class="num">5</td>
+            <td class="num">3</td>
+            <td class="num"><strong>38%</strong></td>
+            <td class="num">0</td>
+            <td class="num">3</td>
+        </tr>
+        <tr>
+            <td class="county-name">Stanislaus</td>
+            <td class="num"><strong style="color: #10B981;">3</strong></td>
+            <td class="num">1</td>
+            <td class="num">3</td>
+            <td class="num"><strong>75%</strong></td>
+            <td class="num">0</td>
+            <td class="num">3</td>
+        </tr></tbody>
+    </table>
+    <p style="font-size: 11px; color: var(--muted); margin-top: 10px;">* Quote Sold ÷ (Quote Sold + Quote Lost). Status labels match the source sheet: "5. Quote Sold" / "06. Quote Sold", "8. Quote Lost" / "08. Quote Lost", "3. Quoted with Contact" / "03. Quoted with Contact".</p>
+</section>
+
+<section id="best">
+    <h2>Best Performance Zip Codes <span class="subtle">3+ Quote Sold — bid modifier 150–175%</span></h2>
+    <p class="section-intro">
+        <strong>22 zip codes</strong> across <strong>14 counties</strong>. I'll configure an aggressive-bid ad group for these — highest ROI per dollar of spend.
+    </p>
+    <div class="county-group"><h3 class="county-header">Santa Clara <span class="county-count">119 Quote Sold · 19 top zips</span></h3><div class="zip-grid">
+    <div class="zip-card" style="border-left-color: #10B981;">
+        <div class="zip-code">95125</div>
+        <div class="zip-county">Santa Clara</div>
+        <div class="zip-stats">
+            <div class="stat"><span class="stat-num" style="color: #10B981;">24</span><span class="stat-lbl">Quote Sold</span></div>
+            <div class="stat"><span class="stat-num" style="color: #6B7280;">21</span><span class="stat-lbl">Quote Lost</span></div>
+            <div class="stat"><span class="stat-num" style="color: #077BE5;">53%</span><span class="stat-lbl">Win Rate</span></div>
+        </div>
+        <span class="target-badge">✓ Targeted</span>
+    </div>
+    <div class="zip-card" style="border-left-color: #10B981;">
+        <div class="zip-code">95008</div>
+        <div class="zip-county">Santa Clara</div>
+        <div class="zip-stats">
+            <div class="stat"><span class="stat-num" style="color: #10B981;">11</span><span class="stat-lbl">Quote Sold</span></div>
+            <div class="stat"><span class="stat-num" style="color: #6B7280;">9</span><span class="stat-lbl">Quote Lost</span></div>
+            <div class="stat"><span class="stat-num" style="color: #077BE5;">55%</span><span class="stat-lbl">Win Rate</span></div>
+        </div>
+        <span class="target-badge">✓ Targeted</span>
+    </div>
+    <div class="zip-card" style="border-left-color: #10B981;">
+        <div class="zip-code">95126</div>
+        <div class="zip-county">Santa Clara</div>
+        <div class="zip-stats">
+            <div class="stat"><span class="stat-num" style="color: #10B981;">10</span><span class="stat-lbl">Quote Sold</span></div>
+            <div class="stat"><span class="stat-num" style="color: #6B7280;">14</span><span class="stat-lbl">Quote Lost</span></div>
+            <div class="stat"><span class="stat-num" style="color: #077BE5;">42%</span><span class="stat-lbl">Win Rate</span></div>
+        </div>
+        <span class="target-badge">✓ Targeted</span>
+    </div>
+    <div class="zip-card" style="border-left-color: #10B981;">
+        <div class="zip-code">95128</div>
+        <div class="zip-county">Santa Clara</div>
+        <div class="zip-stats">
+            <div class="stat"><span class="stat-num" style="color: #10B981;">8</span><span class="stat-lbl">Quote Sold</span></div>
+            <div class="stat"><span class="stat-num" style="color: #6B7280;">6</span><span class="stat-lbl">Quote Lost</span></div>
+            <div class="stat"><span class="stat-num" style="color: #077BE5;">57%</span><span class="stat-lbl">Win Rate</span></div>
+        </div>
+        <span class="target-badge">✓ Targeted</span>
+    </div>
+    <div class="zip-card" style="border-left-color: #10B981;">
+        <div class="zip-code">95111</div>
+        <div class="zip-county">Santa Clara</div>
+        <div class="zip-stats">
+            <div class="stat"><span class="stat-num" style="color: #10B981;">8</span><span class="stat-lbl">Quote Sold</span></div>
+            <div class="stat"><span class="stat-num" style="color: #6B7280;">7</span><span class="stat-lbl">Quote Lost</span></div>
+            <div class="stat"><span class="stat-num" style="color: #077BE5;">53%</span><span class="stat-lbl">Win Rate</span></div>
+        </div>
+        <span class="target-badge">✓ Targeted</span>
+    </div>
+    <div class="zip-card" style="border-left-color: #10B981;">
+        <div class="zip-code">95124</div>
+        <div class="zip-county">Santa Clara</div>
+        <div class="zip-stats">
+            <div class="stat"><span class="stat-num" style="color: #10B981;">7</span><span class="stat-lbl">Quote Sold</span></div>
+            <div class="stat"><span class="stat-num" style="color: #6B7280;">11</span><span class="stat-lbl">Quote Lost</span></div>
+            <div class="stat"><span class="stat-num" style="color: #077BE5;">39%</span><span class="stat-lbl">Win Rate</span></div>
+        </div>
+        <span class="target-badge">✓ Targeted</span>
+    </div>
+    <div class="zip-card" style="border-left-color: #10B981;">
+        <div class="zip-code">95123</div>
+        <div class="zip-county">Santa Clara</div>
+        <div class="zip-stats">
+            <div class="stat"><span class="stat-num" style="color: #10B981;">6</span><span class="stat-lbl">Quote Sold</span></div>
+            <div class="stat"><span class="stat-num" style="color: #6B7280;">15</span><span class="stat-lbl">Quote Lost</span></div>
+            <div class="stat"><span class="stat-num" style="color: #077BE5;">29%</span><span class="stat-lbl">Win Rate</span></div>
+        </div>
+        <span class="target-badge">✓ Targeted</span>
+    </div>
+    <div class="zip-card" style="border-left-color: #10B981;">
+        <div class="zip-code">95127</div>
+        <div class="zip-county">Santa Clara</div>
+        <div class="zip-stats">
+            <div class="stat"><span class="stat-num" style="color: #10B981;">5</span><span class="stat-lbl">Quote Sold</span></div>
+            <div class="stat"><span class="stat-num" style="color: #6B7280;">5</span><span class="stat-lbl">Quote Lost</span></div>
+            <div class="stat"><span class="stat-num" style="color: #077BE5;">50%</span><span class="stat-lbl">Win Rate</span></div>
+        </div>
+        <span class="target-badge">✓ Targeted</span>
+    </div>
+    <div class="zip-card" style="border-left-color: #10B981;">
+        <div class="zip-code">95037</div>
+        <div class="zip-county">Santa Clara</div>
+        <div class="zip-stats">
+            <div class="stat"><span class="stat-num" style="color: #10B981;">5</span><span class="stat-lbl">Quote Sold</span></div>
+            <div class="stat"><span class="stat-num" style="color: #6B7280;">11</span><span class="stat-lbl">Quote Lost</span></div>
+            <div class="stat"><span class="stat-num" style="color: #077BE5;">31%</span><span class="stat-lbl">Win Rate</span></div>
+        </div>
+        <span class="target-badge">✓ Targeted</span>
+    </div>
+    <div class="zip-card" style="border-left-color: #10B981;">
+        <div class="zip-code">95035</div>
+        <div class="zip-county">Santa Clara</div>
+        <div class="zip-stats">
+            <div class="stat"><span class="stat-num" style="color: #10B981;">5</span><span class="stat-lbl">Quote Sold</span></div>
+            <div class="stat"><span class="stat-num" style="color: #6B7280;">12</span><span class="stat-lbl">Quote Lost</span></div>
+            <div class="stat"><span class="stat-num" style="color: #077BE5;">29%</span><span class="stat-lbl">Win Rate</span></div>
+        </div>
+        <span class="target-badge">✓ Targeted</span>
+    </div>
+    <div class="zip-card" style="border-left-color: #10B981;">
+        <div class="zip-code">95112</div>
+        <div class="zip-county">Santa Clara</div>
+        <div class="zip-stats">
+            <div class="stat"><span class="stat-num" style="color: #10B981;">5</span><span class="stat-lbl">Quote Sold</span></div>
+            <div class="stat"><span class="stat-num" style="color: #6B7280;">14</span><span class="stat-lbl">Quote Lost</span></div>
+            <div class="stat"><span class="stat-num" style="color: #077BE5;">26%</span><span class="stat-lbl">Win Rate</span></div>
+        </div>
+        <span class="target-badge">✓ Targeted</span>
+    </div>
+    <div class="zip-card" style="border-left-color: #10B981;">
+        <div class="zip-code">95118</div>
+        <div class="zip-county">Santa Clara</div>
+        <div class="zip-stats">
+            <div class="stat"><span class="stat-num" style="color: #10B981;">4</span><span class="stat-lbl">Quote Sold</span></div>
+            <div class="stat"><span class="stat-num" style="color: #6B7280;">7</span><span class="stat-lbl">Quote Lost</span></div>
+            <div class="stat"><span class="stat-num" style="color: #077BE5;">36%</span><span class="stat-lbl">Win Rate</span></div>
+        </div>
+        <span class="target-badge">✓ Targeted</span>
+    </div>
+    <div class="zip-card" style="border-left-color: #10B981;">
+        <div class="zip-code">95132</div>
+        <div class="zip-county">Santa Clara</div>
+        <div class="zip-stats">
+            <div class="stat"><span class="stat-num" style="color: #10B981;">3</span><span class="stat-lbl">Quote Sold</span></div>
+            <div class="stat"><span class="stat-num" style="color: #6B7280;">1</span><span class="stat-lbl">Quote Lost</span></div>
+            <div class="stat"><span class="stat-num" style="color: #077BE5;">75%</span><span class="stat-lbl">Win Rate</span></div>
+        </div>
+        <span class="target-badge">✓ Targeted</span>
+    </div>
+    <div class="zip-card" style="border-left-color: #10B981;">
+        <div class="zip-code">95117</div>
+        <div class="zip-county">Santa Clara</div>
+        <div class="zip-stats">
+            <div class="stat"><span class="stat-num" style="color: #10B981;">3</span><span class="stat-lbl">Quote Sold</span></div>
+            <div class="stat"><span class="stat-num" style="color: #6B7280;">2</span><span class="stat-lbl">Quote Lost</span></div>
+            <div class="stat"><span class="stat-num" style="color: #077BE5;">60%</span><span class="stat-lbl">Win Rate</span></div>
+        </div>
+        <span class="target-badge">✓ Targeted</span>
+    </div>
+    <div class="zip-card" style="border-left-color: #10B981;">
+        <div class="zip-code">94085</div>
+        <div class="zip-county">Santa Clara</div>
+        <div class="zip-stats">
+            <div class="stat"><span class="stat-num" style="color: #10B981;">3</span><span class="stat-lbl">Quote Sold</span></div>
+            <div class="stat"><span class="stat-num" style="color: #6B7280;">4</span><span class="stat-lbl">Quote Lost</span></div>
+            <div class="stat"><span class="stat-num" style="color: #077BE5;">43%</span><span class="stat-lbl">Win Rate</span></div>
+        </div>
+        <span class="target-badge">✓ Targeted</span>
+    </div>
+    <div class="zip-card" style="border-left-color: #10B981;">
+        <div class="zip-code">95133</div>
+        <div class="zip-county">Santa Clara</div>
+        <div class="zip-stats">
+            <div class="stat"><span class="stat-num" style="color: #10B981;">3</span><span class="stat-lbl">Quote Sold</span></div>
+            <div class="stat"><span class="stat-num" style="color: #6B7280;">4</span><span class="stat-lbl">Quote Lost</span></div>
+            <div class="stat"><span class="stat-num" style="color: #077BE5;">43%</span><span class="stat-lbl">Win Rate</span></div>
+        </div>
+        <span class="target-badge">✓ Targeted</span>
+    </div>
+    <div class="zip-card" style="border-left-color: #10B981;">
+        <div class="zip-code">95120</div>
+        <div class="zip-county">Santa Clara</div>
+        <div class="zip-stats">
+            <div class="stat"><span class="stat-num" style="color: #10B981;">3</span><span class="stat-lbl">Quote Sold</span></div>
+            <div class="stat"><span class="stat-num" style="color: #6B7280;">5</span><span class="stat-lbl">Quote Lost</span></div>
+            <div class="stat"><span class="stat-num" style="color: #077BE5;">38%</span><span class="stat-lbl">Win Rate</span></div>
+        </div>
+        <span class="target-badge">✓ Targeted</span>
+    </div>
+    <div class="zip-card" style="border-left-color: #10B981;">
+        <div class="zip-code">95148</div>
+        <div class="zip-county">Santa Clara</div>
+        <div class="zip-stats">
+            <div class="stat"><span class="stat-num" style="color: #10B981;">3</span><span class="stat-lbl">Quote Sold</span></div>
+            <div class="stat"><span class="stat-num" style="color: #6B7280;">5</span><span class="stat-lbl">Quote Lost</span></div>
+            <div class="stat"><span class="stat-num" style="color: #077BE5;">38%</span><span class="stat-lbl">Win Rate</span></div>
+        </div>
+        <span class="target-badge">✓ Targeted</span>
+    </div>
+    <div class="zip-card" style="border-left-color: #10B981;">
+        <div class="zip-code">95136</div>
+        <div class="zip-county">Santa Clara</div>
+        <div class="zip-stats">
+            <div class="stat"><span class="stat-num" style="color: #10B981;">3</span><span class="stat-lbl">Quote Sold</span></div>
+            <div class="stat"><span class="stat-num" style="color: #6B7280;">9</span><span class="stat-lbl">Quote Lost</span></div>
+            <div class="stat"><span class="stat-num" style="color: #077BE5;">25%</span><span class="stat-lbl">Win Rate</span></div>
+        </div>
+        <span class="target-badge">✓ Targeted</span>
+    </div></div></div><div class="county-group"><h3 class="county-header">Santa Cruz <span class="county-count">6 Quote Sold · 2 top zips</span></h3><div class="zip-grid">
+    <div class="zip-card" style="border-left-color: #10B981;">
+        <div class="zip-code">95060</div>
+        <div class="zip-county">Santa Cruz</div>
+        <div class="zip-stats">
+            <div class="stat"><span class="stat-num" style="color: #10B981;">3</span><span class="stat-lbl">Quote Sold</span></div>
+            <div class="stat"><span class="stat-num" style="color: #6B7280;">2</span><span class="stat-lbl">Quote Lost</span></div>
+            <div class="stat"><span class="stat-num" style="color: #077BE5;">60%</span><span class="stat-lbl">Win Rate</span></div>
+        </div>
+        <span class="target-badge">✓ Targeted</span>
+    </div>
+    <div class="zip-card" style="border-left-color: #10B981;">
+        <div class="zip-code">95062</div>
+        <div class="zip-county">Santa Cruz</div>
+        <div class="zip-stats">
+            <div class="stat"><span class="stat-num" style="color: #10B981;">3</span><span class="stat-lbl">Quote Sold</span></div>
+            <div class="stat"><span class="stat-num" style="color: #6B7280;">5</span><span class="stat-lbl">Quote Lost</span></div>
+            <div class="stat"><span class="stat-num" style="color: #077BE5;">38%</span><span class="stat-lbl">Win Rate</span></div>
+        </div>
+        <span class="target-badge">✓ Targeted</span>
+    </div></div></div><div class="county-group"><h3 class="county-header">San Mateo <span class="county-count">3 Quote Sold · 1 top zip</span></h3><div class="zip-grid">
+    <div class="zip-card" style="border-left-color: #10B981;">
+        <div class="zip-code">94025</div>
+        <div class="zip-county">San Mateo</div>
+        <div class="zip-stats">
+            <div class="stat"><span class="stat-num" style="color: #10B981;">3</span><span class="stat-lbl">Quote Sold</span></div>
+            <div class="stat"><span class="stat-num" style="color: #6B7280;">1</span><span class="stat-lbl">Quote Lost</span></div>
+            <div class="stat"><span class="stat-num" style="color: #077BE5;">75%</span><span class="stat-lbl">Win Rate</span></div>
+        </div>
+        <span class="target-badge">✓ Targeted</span>
+    </div></div></div>
+</section>
+
+<section id="mid">
+    <h2>Mid-Range Zip Codes <span class="subtle">1–2 Quote Sold — bid modifier 125%</span></h2>
+    <p class="section-intro">
+        <strong>72 zip codes</strong> with at least one Quote Sold record. Modest premium to hold position while the data matures. Number to the right of each zip = Quote Sold count (★ = 2 Quote Sold).
+    </p>
+    <div class="mid-list">
+    <div class="mid-row">
+        <div class="mid-county"><span class="mid-county-name">Santa Clara</span><span class="mid-county-stats">20 Quote Sold · 13 zips</span></div>
+        <div class="mid-pills"><span class="pill" title="Quote Sold: 2 · Quote Lost: 0 · Win Rate: 100%"><span class="pill-zip">95020</span><span class="pill-sold">2★</span></span><span class="pill" title="Quote Sold: 2 · Quote Lost: 1 · Win Rate: 67%"><span class="pill-zip">94087</span><span class="pill-sold">2★</span></span><span class="pill" title="Quote Sold: 2 · Quote Lost: 5 · Win Rate: 29%"><span class="pill-zip">95050</span><span class="pill-sold">2★</span></span><span class="pill" title="Quote Sold: 2 · Quote Lost: 5 · Win Rate: 29%"><span class="pill-zip">95070</span><span class="pill-sold">2★</span></span><span class="pill" title="Quote Sold: 2 · Quote Lost: 5 · Win Rate: 29%"><span class="pill-zip">95134</span><span class="pill-sold">2★</span></span><span class="pill" title="Quote Sold: 2 · Quote Lost: 6 · Win Rate: 25%"><span class="pill-zip">95116</span><span class="pill-sold">2★</span></span><span class="pill" title="Quote Sold: 2 · Quote Lost: 8 · Win Rate: 20%"><span class="pill-zip">94086</span><span class="pill-sold">2★</span></span><span class="pill" title="Quote Sold: 1 · Quote Lost: 0 · Win Rate: 100%"><span class="pill-zip">94043</span><span class="pill-sold">1·</span></span><span class="pill" title="Quote Sold: 1 · Quote Lost: 3 · Win Rate: 25%"><span class="pill-zip">95014</span><span class="pill-sold">1·</span></span><span class="pill" title="Quote Sold: 1 · Quote Lost: 3 · Win Rate: 25%"><span class="pill-zip">95129</span><span class="pill-sold">1·</span></span><span class="pill" title="Quote Sold: 1 · Quote Lost: 5 · Win Rate: 17%"><span class="pill-zip">95121</span><span class="pill-sold">1·</span></span><span class="pill" title="Quote Sold: 1 · Quote Lost: 6 · Win Rate: 14%"><span class="pill-zip">95054</span><span class="pill-sold">1·</span></span><span class="pill" title="Quote Sold: 1 · Quote Lost: 12 · Win Rate: 8%"><span class="pill-zip">95051</span><span class="pill-sold">1·</span></span></div>
+    </div>
+    <div class="mid-row">
+        <div class="mid-county"><span class="mid-county-name">Alameda</span><span class="mid-county-stats">12 Quote Sold · 8 zips</span></div>
+        <div class="mid-pills"><span class="pill" title="Quote Sold: 2 · Quote Lost: 0 · Win Rate: 100%"><span class="pill-zip">94550</span><span class="pill-sold">2★</span></span><span class="pill" title="Quote Sold: 2 · Quote Lost: 0 · Win Rate: 100%"><span class="pill-zip">94610</span><span class="pill-sold">2★</span></span><span class="pill" title="Quote Sold: 2 · Quote Lost: 4 · Win Rate: 33%"><span class="pill-zip">94539</span><span class="pill-sold">2★</span></span><span class="pill" title="Quote Sold: 2 · Quote Lost: 14 · Win Rate: 12%"><span class="pill-zip">94538</span><span class="pill-sold">2★</span></span><span class="pill" title="Quote Sold: 1 · Quote Lost: 0 · Win Rate: 100%"><span class="pill-zip">94568</span><span class="pill-sold">1·</span></span><span class="pill" title="Quote Sold: 1 · Quote Lost: 0 · Win Rate: 100%"><span class="pill-zip">94580</span><span class="pill-sold">1·</span></span><span class="pill" title="Quote Sold: 1 · Quote Lost: 0 · Win Rate: 100%"><span class="pill-zip">94620</span><span class="pill-sold">1·</span></span><span class="pill" title="Quote Sold: 1 · Quote Lost: 8 · Win Rate: 11%"><span class="pill-zip">94536</span><span class="pill-sold">1·</span></span></div>
+    </div>
+    <div class="mid-row">
+        <div class="mid-county"><span class="mid-county-name">Los Angeles</span><span class="mid-county-stats">9 Quote Sold · 6 zips</span></div>
+        <div class="mid-pills"><span class="pill" title="Quote Sold: 2 · Quote Lost: 0 · Win Rate: 100%"><span class="pill-zip">91011</span><span class="pill-sold">2★</span></span><span class="pill" title="Quote Sold: 2 · Quote Lost: 0 · Win Rate: 100%"><span class="pill-zip">91042</span><span class="pill-sold">2★</span></span><span class="pill" title="Quote Sold: 2 · Quote Lost: 4 · Win Rate: 33%"><span class="pill-zip">90706</span><span class="pill-sold">2★</span></span><span class="pill" title="Quote Sold: 1 · Quote Lost: 2 · Win Rate: 33%"><span class="pill-zip">90044</span><span class="pill-sold">1·</span></span><span class="pill" title="Quote Sold: 1 · Quote Lost: 2 · Win Rate: 33%"><span class="pill-zip">90220</span><span class="pill-sold">1·</span></span><span class="pill" title="Quote Sold: 1 · Quote Lost: 2 · Win Rate: 33%"><span class="pill-zip">90250</span><span class="pill-sold">1·</span></span></div>
+    </div>
+    <div class="mid-row">
+        <div class="mid-county"><span class="mid-county-name">Orange</span><span class="mid-county-stats">4 Quote Sold · 4 zips</span></div>
+        <div class="mid-pills"><span class="pill" title="Quote Sold: 1 · Quote Lost: 0 · Win Rate: 100%"><span class="pill-zip">92676</span><span class="pill-sold">1·</span></span><span class="pill" title="Quote Sold: 1 · Quote Lost: 0 · Win Rate: 100%"><span class="pill-zip">92833</span><span class="pill-sold">1·</span></span><span class="pill" title="Quote Sold: 1 · Quote Lost: 1 · Win Rate: 50%"><span class="pill-zip">92677</span><span class="pill-sold">1·</span></span><span class="pill" title="Quote Sold: 1 · Quote Lost: 3 · Win Rate: 25%"><span class="pill-zip">92618</span><span class="pill-sold">1·</span></span></div>
+    </div>
+    <div class="mid-row">
+        <div class="mid-county"><span class="mid-county-name">Contra Costa</span><span class="mid-county-stats">3 Quote Sold · 2 zips</span></div>
+        <div class="mid-pills"><span class="pill" title="Quote Sold: 2 · Quote Lost: 0 · Win Rate: 100%"><span class="pill-zip">94582</span><span class="pill-sold">2★</span></span><span class="pill" title="Quote Sold: 1 · Quote Lost: 2 · Win Rate: 33%"><span class="pill-zip">94531</span><span class="pill-sold">1·</span></span></div>
+    </div>
+    <div class="mid-row">
+        <div class="mid-county"><span class="mid-county-name">Riverside</span><span class="mid-county-stats">3 Quote Sold · 2 zips</span></div>
+        <div class="mid-pills"><span class="pill" title="Quote Sold: 2 · Quote Lost: 1 · Win Rate: 67%"><span class="pill-zip">92509</span><span class="pill-sold">2★</span></span><span class="pill" title="Quote Sold: 1 · Quote Lost: 0 · Win Rate: 100%"><span class="pill-zip">92503</span><span class="pill-sold">1·</span></span></div>
+    </div>
+    <div class="mid-row">
+        <div class="mid-county"><span class="mid-county-name">San Bernardino</span><span class="mid-county-stats">3 Quote Sold · 2 zips</span></div>
+        <div class="mid-pills"><span class="pill" title="Quote Sold: 2 · Quote Lost: 11 · Win Rate: 15%"><span class="pill-zip">92345</span><span class="pill-sold">2★</span></span><span class="pill" title="Quote Sold: 1 · Quote Lost: 0 · Win Rate: 100%"><span class="pill-zip">92336</span><span class="pill-sold">1·</span></span></div>
+    </div>
+    <div class="mid-row">
+        <div class="mid-county"><span class="mid-county-name">Sacramento</span><span class="mid-county-stats">3 Quote Sold · 3 zips</span></div>
+        <div class="mid-pills"><span class="pill" title="Quote Sold: 1 · Quote Lost: 0 · Win Rate: 100%"><span class="pill-zip">95821</span><span class="pill-sold">1·</span></span><span class="pill" title="Quote Sold: 1 · Quote Lost: 1 · Win Rate: 50%"><span class="pill-zip">95835</span><span class="pill-sold">1·</span></span><span class="pill" title="Quote Sold: 1 · Quote Lost: 2 · Win Rate: 33%"><span class="pill-zip">95630</span><span class="pill-sold">1·</span></span></div>
+    </div>
+    <div class="mid-row">
+        <div class="mid-county"><span class="mid-county-name">San Diego</span><span class="mid-county-stats">3 Quote Sold · 3 zips</span></div>
+        <div class="mid-pills"><span class="pill" title="Quote Sold: 1 · Quote Lost: 0 · Win Rate: 100%"><span class="pill-zip">92025</span><span class="pill-sold">1·</span></span><span class="pill" title="Quote Sold: 1 · Quote Lost: 0 · Win Rate: 100%"><span class="pill-zip">92117</span><span class="pill-sold">1·</span></span><span class="pill" title="Quote Sold: 1 · Quote Lost: 2 · Win Rate: 33%"><span class="pill-zip">92115</span><span class="pill-sold">1·</span></span></div>
+    </div>
+    <div class="mid-row">
+        <div class="mid-county"><span class="mid-county-name">San Francisco</span><span class="mid-county-stats">3 Quote Sold · 3 zips</span></div>
+        <div class="mid-pills"><span class="pill" title="Quote Sold: 1 · Quote Lost: 0 · Win Rate: 100%"><span class="pill-zip">94103</span><span class="pill-sold">1·</span></span><span class="pill" title="Quote Sold: 1 · Quote Lost: 0 · Win Rate: 100%"><span class="pill-zip">94130</span><span class="pill-sold">1·</span></span><span class="pill" title="Quote Sold: 1 · Quote Lost: 2 · Win Rate: 33%"><span class="pill-zip">94114</span><span class="pill-sold">1·</span></span></div>
+    </div>
+    <div class="mid-row">
+        <div class="mid-county"><span class="mid-county-name">San Joaquin</span><span class="mid-county-stats">3 Quote Sold · 3 zips</span></div>
+        <div class="mid-pills"><span class="pill" title="Quote Sold: 1 · Quote Lost: 0 · Win Rate: 100%"><span class="pill-zip">95337</span><span class="pill-sold">1·</span></span><span class="pill" title="Quote Sold: 1 · Quote Lost: 1 · Win Rate: 50%"><span class="pill-zip">95376</span><span class="pill-sold">1·</span></span><span class="pill" title="Quote Sold: 1 · Quote Lost: 2 · Win Rate: 33%"><span class="pill-zip">95209</span><span class="pill-sold">1·</span></span></div>
+    </div>
+    <div class="mid-row">
+        <div class="mid-county"><span class="mid-county-name">San Mateo</span><span class="mid-county-stats">3 Quote Sold · 3 zips</span></div>
+        <div class="mid-pills"><span class="pill" title="Quote Sold: 1 · Quote Lost: 0 · Win Rate: 100%"><span class="pill-zip">94030</span><span class="pill-sold">1·</span></span><span class="pill" title="Quote Sold: 1 · Quote Lost: 0 · Win Rate: 100%"><span class="pill-zip">94402</span><span class="pill-sold">1·</span></span><span class="pill" title="Quote Sold: 1 · Quote Lost: 0 · Win Rate: 100%"><span class="pill-zip">94404</span><span class="pill-sold">1·</span></span></div>
+    </div>
+    <div class="mid-row">
+        <div class="mid-county"><span class="mid-county-name">Santa Cruz</span><span class="mid-county-stats">3 Quote Sold · 3 zips</span></div>
+        <div class="mid-pills"><span class="pill" title="Quote Sold: 1 · Quote Lost: 0 · Win Rate: 100%"><span class="pill-zip">95066</span><span class="pill-sold">1·</span></span><span class="pill" title="Quote Sold: 1 · Quote Lost: 1 · Win Rate: 50%"><span class="pill-zip">95033</span><span class="pill-sold">1·</span></span><span class="pill" title="Quote Sold: 1 · Quote Lost: 2 · Win Rate: 33%"><span class="pill-zip">95076</span><span class="pill-sold">1·</span></span></div>
+    </div>
+    <div class="mid-row">
+        <div class="mid-county"><span class="mid-county-name">Stanislaus</span><span class="mid-county-stats">3 Quote Sold · 3 zips</span></div>
+        <div class="mid-pills"><span class="pill" title="Quote Sold: 1 · Quote Lost: 0 · Win Rate: 100%"><span class="pill-zip">95355</span><span class="pill-sold">1·</span></span><span class="pill" title="Quote Sold: 1 · Quote Lost: 0 · Win Rate: 100%"><span class="pill-zip">95363</span><span class="pill-sold">1·</span></span><span class="pill" title="Quote Sold: 1 · Quote Lost: 1 · Win Rate: 50%"><span class="pill-zip">95350</span><span class="pill-sold">1·</span></span></div>
+    </div>
+    <div class="mid-row">
+        <div class="mid-county"><span class="mid-county-name">San Benito</span><span class="mid-county-stats">2 Quote Sold · 1 zip</span></div>
+        <div class="mid-pills"><span class="pill" title="Quote Sold: 2 · Quote Lost: 0 · Win Rate: 100%"><span class="pill-zip">95023</span><span class="pill-sold">2★</span></span></div>
+    </div>
+    <div class="mid-row">
+        <div class="mid-county"><span class="mid-county-name">Trinity</span><span class="mid-county-stats">2 Quote Sold · 1 zip</span></div>
+        <div class="mid-pills"><span class="pill" title="Quote Sold: 2 · Quote Lost: 1 · Win Rate: 67%"><span class="pill-zip">96093</span><span class="pill-sold">2★</span></span></div>
+    </div>
+    <div class="mid-row">
+        <div class="mid-county"><span class="mid-county-name">El Dorado</span><span class="mid-county-stats">2 Quote Sold · 2 zips</span></div>
+        <div class="mid-pills"><span class="pill" title="Quote Sold: 1 · Quote Lost: 0 · Win Rate: 100%"><span class="pill-zip">95682</span><span class="pill-sold">1·</span></span><span class="pill" title="Quote Sold: 1 · Quote Lost: 0 · Win Rate: 100%"><span class="pill-zip">96150</span><span class="pill-sold">1·</span></span></div>
+    </div>
+    <div class="mid-row">
+        <div class="mid-county"><span class="mid-county-name">Monterey</span><span class="mid-county-stats">2 Quote Sold · 2 zips</span></div>
+        <div class="mid-pills"><span class="pill" title="Quote Sold: 1 · Quote Lost: 0 · Win Rate: 100%"><span class="pill-zip">93933</span><span class="pill-sold">1·</span></span><span class="pill" title="Quote Sold: 1 · Quote Lost: 0 · Win Rate: 100%"><span class="pill-zip">93950</span><span class="pill-sold">1·</span></span></div>
+    </div>
+    <div class="mid-row">
+        <div class="mid-county"><span class="mid-county-name">Kern</span><span class="mid-county-stats">2 Quote Sold · 2 zips</span></div>
+        <div class="mid-pills"><span class="pill" title="Quote Sold: 1 · Quote Lost: 0 · Win Rate: 100%"><span class="pill-zip">93263</span><span class="pill-sold">1·</span></span><span class="pill" title="Quote Sold: 1 · Quote Lost: 2 · Win Rate: 33%"><span class="pill-zip">93307</span><span class="pill-sold">1·</span></span></div>
+    </div>
+    <div class="mid-row">
+        <div class="mid-county"><span class="mid-county-name">Lake</span><span class="mid-county-stats">1 Quote Sold · 1 zip</span></div>
+        <div class="mid-pills"><span class="pill" title="Quote Sold: 1 · Quote Lost: 0 · Win Rate: 100%"><span class="pill-zip">95451</span><span class="pill-sold">1·</span></span></div>
+    </div>
+    <div class="mid-row">
+        <div class="mid-county"><span class="mid-county-name">Santa Barbara</span><span class="mid-county-stats">1 Quote Sold · 1 zip</span></div>
+        <div class="mid-pills"><span class="pill" title="Quote Sold: 1 · Quote Lost: 0 · Win Rate: 100%"><span class="pill-zip">93103</span><span class="pill-sold">1·</span></span></div>
+    </div>
+    <div class="mid-row">
+        <div class="mid-county"><span class="mid-county-name">Tulare</span><span class="mid-county-stats">1 Quote Sold · 1 zip</span></div>
+        <div class="mid-pills"><span class="pill" title="Quote Sold: 1 · Quote Lost: 0 · Win Rate: 100%"><span class="pill-zip">93257</span><span class="pill-sold">1·</span></span></div>
+    </div>
+    <div class="mid-row">
+        <div class="mid-county"><span class="mid-county-name">Out-of-State</span><span class="mid-county-stats">1 Quote Sold · 1 zip</span></div>
+        <div class="mid-pills"><span class="pill" title="Quote Sold: 1 · Quote Lost: 0 · Win Rate: 100%"><span class="pill-zip">55126</span><span class="pill-sold">1·</span></span></div>
+    </div>
+    <div class="mid-row">
+        <div class="mid-county"><span class="mid-county-name">Ventura</span><span class="mid-county-stats">1 Quote Sold · 1 zip</span></div>
+        <div class="mid-pills"><span class="pill" title="Quote Sold: 1 · Quote Lost: 1 · Win Rate: 50%"><span class="pill-zip">93063</span><span class="pill-sold">1·</span></span></div>
+    </div>
+    <div class="mid-row">
+        <div class="mid-county"><span class="mid-county-name">Sonoma</span><span class="mid-county-stats">1 Quote Sold · 1 zip</span></div>
+        <div class="mid-pills"><span class="pill" title="Quote Sold: 1 · Quote Lost: 3 · Win Rate: 25%"><span class="pill-zip">94954</span><span class="pill-sold">1·</span></span></div>
+    </div></div>
+</section>
+
+<section id="exclude">
+    <h2>Zip Codes to Exclude <span class="subtle">3+ opportunities, 0 Quote Sold — filter out of targeting</span></h2>
+    <p class="section-intro">
+        <strong>24 zip codes</strong> with meaningful lead volume but zero Quote Sold records. Pulling these out of targeting redirects spend to zips where the Allstate offer actually converts. Red number to the right = total opportunities (Quote Lost + Quoted with Contact + Quoted without Contact + Contacted/No Quote + Quote Rejected).
+    </p>
+    <div class="mid-list">
+    <div class="mid-row">
+        <div class="mid-county"><span class="mid-county-name">Santa Clara</span><span class="mid-county-stats">23 Quote Lost · 33 opportunities · 7 zips</span></div>
+        <div class="mid-pills"><span class="pill pill-excl" title="Quote Lost: 8 · Quoted with Contact: 2 · Total Opportunities: 10"><span class="pill-zip">95110</span><span class="pill-opps">10</span></span><span class="pill pill-excl" title="Quote Lost: 2 · Quoted with Contact: 3 · Total Opportunities: 5"><span class="pill-zip">95122</span><span class="pill-opps">5</span></span><span class="pill pill-excl" title="Quote Lost: 4 · Quoted with Contact: 0 · Total Opportunities: 4"><span class="pill-zip">95131</span><span class="pill-opps">4</span></span><span class="pill pill-excl" title="Quote Lost: 4 · Quoted with Contact: 0 · Total Opportunities: 4"><span class="pill-zip">95135</span><span class="pill-opps">4</span></span><span class="pill pill-excl" title="Quote Lost: 1 · Quoted with Contact: 3 · Total Opportunities: 4"><span class="pill-zip">95032</span><span class="pill-opps">4</span></span><span class="pill pill-excl" title="Quote Lost: 3 · Quoted with Contact: 0 · Total Opportunities: 3"><span class="pill-zip">94089</span><span class="pill-opps">3</span></span><span class="pill pill-excl" title="Quote Lost: 1 · Quoted with Contact: 2 · Total Opportunities: 3"><span class="pill-zip">94040</span><span class="pill-opps">3</span></span></div>
+    </div>
+    <div class="mid-row">
+        <div class="mid-county"><span class="mid-county-name">Alameda</span><span class="mid-county-stats">11 Quote Lost · 13 opportunities · 3 zips</span></div>
+        <div class="mid-pills"><span class="pill pill-excl" title="Quote Lost: 5 · Quoted with Contact: 1 · Total Opportunities: 6"><span class="pill-zip">94587</span><span class="pill-opps">6</span></span><span class="pill pill-excl" title="Quote Lost: 4 · Quoted with Contact: 0 · Total Opportunities: 4"><span class="pill-zip">94560</span><span class="pill-opps">4</span></span><span class="pill pill-excl" title="Quote Lost: 2 · Quoted with Contact: 1 · Total Opportunities: 3"><span class="pill-zip">94555</span><span class="pill-opps">3</span></span></div>
+    </div>
+    <div class="mid-row">
+        <div class="mid-county"><span class="mid-county-name">Contra Costa</span><span class="mid-county-stats">8 Quote Lost · 12 opportunities · 3 zips</span></div>
+        <div class="mid-pills"><span class="pill pill-excl" title="Quote Lost: 2 · Quoted with Contact: 3 · Total Opportunities: 5"><span class="pill-zip">94513</span><span class="pill-opps">5</span></span><span class="pill pill-excl" title="Quote Lost: 3 · Quoted with Contact: 0 · Total Opportunities: 4"><span class="pill-zip">94565</span><span class="pill-opps">4</span></span><span class="pill pill-excl" title="Quote Lost: 3 · Quoted with Contact: 0 · Total Opportunities: 3"><span class="pill-zip">94563</span><span class="pill-opps">3</span></span></div>
+    </div>
+    <div class="mid-row">
+        <div class="mid-county"><span class="mid-county-name">Los Angeles</span><span class="mid-county-stats">5 Quote Lost · 7 opportunities · 2 zips</span></div>
+        <div class="mid-pills"><span class="pill pill-excl" title="Quote Lost: 2 · Quoted with Contact: 2 · Total Opportunities: 4"><span class="pill-zip">90047</span><span class="pill-opps">4</span></span><span class="pill pill-excl" title="Quote Lost: 3 · Quoted with Contact: 0 · Total Opportunities: 3"><span class="pill-zip">90640</span><span class="pill-opps">3</span></span></div>
+    </div>
+    <div class="mid-row">
+        <div class="mid-county"><span class="mid-county-name">Solano</span><span class="mid-county-stats">5 Quote Lost · 6 opportunities · 1 zip</span></div>
+        <div class="mid-pills"><span class="pill pill-excl" title="Quote Lost: 5 · Quoted with Contact: 1 · Total Opportunities: 6"><span class="pill-zip">94591</span><span class="pill-opps">6</span></span></div>
+    </div>
+    <div class="mid-row">
+        <div class="mid-county"><span class="mid-county-name">Orange</span><span class="mid-county-stats">4 Quote Lost · 6 opportunities · 1 zip</span></div>
+        <div class="mid-pills"><span class="pill pill-excl" title="Quote Lost: 4 · Quoted with Contact: 2 · Total Opportunities: 6"><span class="pill-zip">92804</span><span class="pill-opps">6</span></span></div>
+    </div>
+    <div class="mid-row">
+        <div class="mid-county"><span class="mid-county-name">San Diego</span><span class="mid-county-stats">5 Quote Lost · 6 opportunities · 2 zips</span></div>
+        <div class="mid-pills"><span class="pill pill-excl" title="Quote Lost: 3 · Quoted with Contact: 0 · Total Opportunities: 3"><span class="pill-zip">92110</span><span class="pill-opps">3</span></span><span class="pill pill-excl" title="Quote Lost: 2 · Quoted with Contact: 1 · Total Opportunities: 3"><span class="pill-zip">92105</span><span class="pill-opps">3</span></span></div>
+    </div>
+    <div class="mid-row">
+        <div class="mid-county"><span class="mid-county-name">Santa Cruz</span><span class="mid-county-stats">5 Quote Lost · 6 opportunities · 2 zips</span></div>
+        <div class="mid-pills"><span class="pill pill-excl" title="Quote Lost: 3 · Quoted with Contact: 0 · Total Opportunities: 3"><span class="pill-zip">95003</span><span class="pill-opps">3</span></span><span class="pill pill-excl" title="Quote Lost: 2 · Quoted with Contact: 1 · Total Opportunities: 3"><span class="pill-zip">95010</span><span class="pill-opps">3</span></span></div>
+    </div>
+    <div class="mid-row">
+        <div class="mid-county"><span class="mid-county-name">Merced</span><span class="mid-county-stats">4 Quote Lost · 5 opportunities · 1 zip</span></div>
+        <div class="mid-pills"><span class="pill pill-excl" title="Quote Lost: 4 · Quoted with Contact: 1 · Total Opportunities: 5"><span class="pill-zip">93635</span><span class="pill-opps">5</span></span></div>
+    </div>
+    <div class="mid-row">
+        <div class="mid-county"><span class="mid-county-name">El Dorado</span><span class="mid-county-stats">3 Quote Lost · 3 opportunities · 1 zip</span></div>
+        <div class="mid-pills"><span class="pill pill-excl" title="Quote Lost: 3 · Quoted with Contact: 0 · Total Opportunities: 3"><span class="pill-zip">95762</span><span class="pill-opps">3</span></span></div>
+    </div>
+    <div class="mid-row">
+        <div class="mid-county"><span class="mid-county-name">San Bernardino</span><span class="mid-county-stats">0 Quote Lost · 3 opportunities · 1 zip</span></div>
+        <div class="mid-pills"><span class="pill pill-excl" title="Quote Lost: 0 · Quoted with Contact: 2 · Total Opportunities: 3"><span class="pill-zip">92324</span><span class="pill-opps">3</span></span></div>
+    </div></div>
+</section>
+
+<section id="targets">
+    <h2>Complete Target List <span class="subtle">93 zip codes configured in the platform</span></h2>
+    <p class="section-intro">
+        Every zip from the sheet you sent. Tier determines the bid modifier applied at the ad-group level.
+    </p>
+    <div class="legend">
+        <span class="legend-item"><span class="legend-dot" style="background: var(--success);"></span>Best (3+ Quote Sold, 150–175%)</span>
+        <span class="legend-item"><span class="legend-dot" style="background: var(--goal-accent-3);"></span>Mid (1–2 Quote Sold, 125%)</span>
+        <span class="legend-item"><span class="legend-dot" style="background: var(--warn);"></span>New (0 Quote Sold, monitor)</span>
+        <span class="legend-item"><span class="legend-dot" style="background: var(--danger);"></span>Low Data (&lt;5 Quote Sold + Quote Lost, insufficient signal)</span>
+    </div>
+    <div style="margin-top: 16px; max-height: 600px; overflow-y: auto; border: 1px solid var(--border); border-radius: 8px;">
+        <table>
+            <thead>
+                <tr>
+                    <th>Zip Code</th><th>County</th><th class="num">Quote Sold</th><th class="num">Quote Lost</th>
+                    <th class="num">Quoted with Contact</th><th class="num">Win Rate</th><th>Tier</th>
+                </tr>
+            </thead>
+            <tbody>
+        <tr>
+            <td class="zip-monospace">95125</td>
+            <td>Santa Clara</td>
+            <td class="num"><strong style="color: #10B981;">24</strong></td>
+            <td class="num">21</td>
+            <td class="num">6</td>
+            <td class="num">53%</td>
+            <td><span class="tier-badge tier-best">Best</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">95008</td>
+            <td>Santa Clara</td>
+            <td class="num"><strong style="color: #10B981;">11</strong></td>
+            <td class="num">9</td>
+            <td class="num">3</td>
+            <td class="num">55%</td>
+            <td><span class="tier-badge tier-best">Best</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">95126</td>
+            <td>Santa Clara</td>
+            <td class="num"><strong style="color: #10B981;">10</strong></td>
+            <td class="num">14</td>
+            <td class="num">6</td>
+            <td class="num">42%</td>
+            <td><span class="tier-badge tier-best">Best</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">95111</td>
+            <td>Santa Clara</td>
+            <td class="num"><strong style="color: #10B981;">8</strong></td>
+            <td class="num">7</td>
+            <td class="num">4</td>
+            <td class="num">53%</td>
+            <td><span class="tier-badge tier-best">Best</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">95128</td>
+            <td>Santa Clara</td>
+            <td class="num"><strong style="color: #10B981;">8</strong></td>
+            <td class="num">6</td>
+            <td class="num">2</td>
+            <td class="num">57%</td>
+            <td><span class="tier-badge tier-best">Best</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">95124</td>
+            <td>Santa Clara</td>
+            <td class="num"><strong style="color: #10B981;">7</strong></td>
+            <td class="num">11</td>
+            <td class="num">3</td>
+            <td class="num">39%</td>
+            <td><span class="tier-badge tier-best">Best</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">95123</td>
+            <td>Santa Clara</td>
+            <td class="num"><strong style="color: #10B981;">6</strong></td>
+            <td class="num">15</td>
+            <td class="num">3</td>
+            <td class="num">29%</td>
+            <td><span class="tier-badge tier-best">Best</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">95035</td>
+            <td>Santa Clara</td>
+            <td class="num"><strong style="color: #10B981;">5</strong></td>
+            <td class="num">12</td>
+            <td class="num">8</td>
+            <td class="num">29%</td>
+            <td><span class="tier-badge tier-best">Best</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">95037</td>
+            <td>Santa Clara</td>
+            <td class="num"><strong style="color: #10B981;">5</strong></td>
+            <td class="num">11</td>
+            <td class="num">0</td>
+            <td class="num">31%</td>
+            <td><span class="tier-badge tier-best">Best</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">95112</td>
+            <td>Santa Clara</td>
+            <td class="num"><strong style="color: #10B981;">5</strong></td>
+            <td class="num">14</td>
+            <td class="num">5</td>
+            <td class="num">26%</td>
+            <td><span class="tier-badge tier-best">Best</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">95127</td>
+            <td>Santa Clara</td>
+            <td class="num"><strong style="color: #10B981;">5</strong></td>
+            <td class="num">5</td>
+            <td class="num">0</td>
+            <td class="num">50%</td>
+            <td><span class="tier-badge tier-best">Best</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">95118</td>
+            <td>Santa Clara</td>
+            <td class="num"><strong style="color: #10B981;">4</strong></td>
+            <td class="num">7</td>
+            <td class="num">2</td>
+            <td class="num">36%</td>
+            <td><span class="tier-badge tier-best">Best</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">94025</td>
+            <td>San Mateo</td>
+            <td class="num"><strong style="color: #10B981;">3</strong></td>
+            <td class="num">1</td>
+            <td class="num">0</td>
+            <td class="num">75%</td>
+            <td><span class="tier-badge tier-best">Best</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">94085</td>
+            <td>Santa Clara</td>
+            <td class="num"><strong style="color: #10B981;">3</strong></td>
+            <td class="num">4</td>
+            <td class="num">3</td>
+            <td class="num">43%</td>
+            <td><span class="tier-badge tier-best">Best</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">95060</td>
+            <td>Santa Cruz</td>
+            <td class="num"><strong style="color: #10B981;">3</strong></td>
+            <td class="num">2</td>
+            <td class="num">0</td>
+            <td class="num">60%</td>
+            <td><span class="tier-badge tier-best">Best</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">95062</td>
+            <td>Santa Cruz</td>
+            <td class="num"><strong style="color: #10B981;">3</strong></td>
+            <td class="num">5</td>
+            <td class="num">0</td>
+            <td class="num">38%</td>
+            <td><span class="tier-badge tier-best">Best</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">95117</td>
+            <td>Santa Clara</td>
+            <td class="num"><strong style="color: #10B981;">3</strong></td>
+            <td class="num">2</td>
+            <td class="num">1</td>
+            <td class="num">60%</td>
+            <td><span class="tier-badge tier-best">Best</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">95120</td>
+            <td>Santa Clara</td>
+            <td class="num"><strong style="color: #10B981;">3</strong></td>
+            <td class="num">5</td>
+            <td class="num">1</td>
+            <td class="num">38%</td>
+            <td><span class="tier-badge tier-best">Best</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">95132</td>
+            <td>Santa Clara</td>
+            <td class="num"><strong style="color: #10B981;">3</strong></td>
+            <td class="num">1</td>
+            <td class="num">0</td>
+            <td class="num">75%</td>
+            <td><span class="tier-badge tier-best">Best</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">95133</td>
+            <td>Santa Clara</td>
+            <td class="num"><strong style="color: #10B981;">3</strong></td>
+            <td class="num">4</td>
+            <td class="num">0</td>
+            <td class="num">43%</td>
+            <td><span class="tier-badge tier-best">Best</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">95136</td>
+            <td>Santa Clara</td>
+            <td class="num"><strong style="color: #10B981;">3</strong></td>
+            <td class="num">9</td>
+            <td class="num">0</td>
+            <td class="num">25%</td>
+            <td><span class="tier-badge tier-best">Best</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">95148</td>
+            <td>Santa Clara</td>
+            <td class="num"><strong style="color: #10B981;">3</strong></td>
+            <td class="num">5</td>
+            <td class="num">1</td>
+            <td class="num">38%</td>
+            <td><span class="tier-badge tier-best">Best</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">90706</td>
+            <td>Los Angeles</td>
+            <td class="num"><strong style="color: #10B981;">2</strong></td>
+            <td class="num">4</td>
+            <td class="num">0</td>
+            <td class="num">33%</td>
+            <td><span class="tier-badge tier-mid">Mid</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">91011</td>
+            <td>Los Angeles</td>
+            <td class="num"><strong style="color: #10B981;">2</strong></td>
+            <td class="num">0</td>
+            <td class="num">0</td>
+            <td class="num">100%</td>
+            <td><span class="tier-badge tier-low">Low Data</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">91042</td>
+            <td>Los Angeles</td>
+            <td class="num"><strong style="color: #10B981;">2</strong></td>
+            <td class="num">0</td>
+            <td class="num">1</td>
+            <td class="num">100%</td>
+            <td><span class="tier-badge tier-low">Low Data</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">92345</td>
+            <td>San Bernardino</td>
+            <td class="num"><strong style="color: #10B981;">2</strong></td>
+            <td class="num">11</td>
+            <td class="num">4</td>
+            <td class="num">15%</td>
+            <td><span class="tier-badge tier-mid">Mid</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">92509</td>
+            <td>Riverside</td>
+            <td class="num"><strong style="color: #10B981;">2</strong></td>
+            <td class="num">1</td>
+            <td class="num">1</td>
+            <td class="num">67%</td>
+            <td><span class="tier-badge tier-low">Low Data</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">94086</td>
+            <td>Santa Clara</td>
+            <td class="num"><strong style="color: #10B981;">2</strong></td>
+            <td class="num">8</td>
+            <td class="num">3</td>
+            <td class="num">20%</td>
+            <td><span class="tier-badge tier-mid">Mid</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">94087</td>
+            <td>Santa Clara</td>
+            <td class="num"><strong style="color: #10B981;">2</strong></td>
+            <td class="num">1</td>
+            <td class="num">1</td>
+            <td class="num">67%</td>
+            <td><span class="tier-badge tier-low">Low Data</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">94538</td>
+            <td>Alameda</td>
+            <td class="num"><strong style="color: #10B981;">2</strong></td>
+            <td class="num">14</td>
+            <td class="num">4</td>
+            <td class="num">12%</td>
+            <td><span class="tier-badge tier-mid">Mid</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">94539</td>
+            <td>Alameda</td>
+            <td class="num"><strong style="color: #10B981;">2</strong></td>
+            <td class="num">4</td>
+            <td class="num">0</td>
+            <td class="num">33%</td>
+            <td><span class="tier-badge tier-mid">Mid</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">94550</td>
+            <td>Alameda</td>
+            <td class="num"><strong style="color: #10B981;">2</strong></td>
+            <td class="num">0</td>
+            <td class="num">0</td>
+            <td class="num">100%</td>
+            <td><span class="tier-badge tier-low">Low Data</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">94582</td>
+            <td>Contra Costa</td>
+            <td class="num"><strong style="color: #10B981;">2</strong></td>
+            <td class="num">0</td>
+            <td class="num">0</td>
+            <td class="num">100%</td>
+            <td><span class="tier-badge tier-low">Low Data</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">94610</td>
+            <td>Alameda</td>
+            <td class="num"><strong style="color: #10B981;">2</strong></td>
+            <td class="num">0</td>
+            <td class="num">0</td>
+            <td class="num">100%</td>
+            <td><span class="tier-badge tier-low">Low Data</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">95020</td>
+            <td>Santa Clara</td>
+            <td class="num"><strong style="color: #10B981;">2</strong></td>
+            <td class="num">0</td>
+            <td class="num">3</td>
+            <td class="num">100%</td>
+            <td><span class="tier-badge tier-low">Low Data</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">95023</td>
+            <td>San Benito</td>
+            <td class="num"><strong style="color: #10B981;">2</strong></td>
+            <td class="num">0</td>
+            <td class="num">0</td>
+            <td class="num">100%</td>
+            <td><span class="tier-badge tier-low">Low Data</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">95050</td>
+            <td>Santa Clara</td>
+            <td class="num"><strong style="color: #10B981;">2</strong></td>
+            <td class="num">5</td>
+            <td class="num">1</td>
+            <td class="num">29%</td>
+            <td><span class="tier-badge tier-mid">Mid</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">95070</td>
+            <td>Santa Clara</td>
+            <td class="num"><strong style="color: #10B981;">2</strong></td>
+            <td class="num">5</td>
+            <td class="num">0</td>
+            <td class="num">29%</td>
+            <td><span class="tier-badge tier-mid">Mid</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">95116</td>
+            <td>Santa Clara</td>
+            <td class="num"><strong style="color: #10B981;">2</strong></td>
+            <td class="num">6</td>
+            <td class="num">0</td>
+            <td class="num">25%</td>
+            <td><span class="tier-badge tier-mid">Mid</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">95134</td>
+            <td>Santa Clara</td>
+            <td class="num"><strong style="color: #10B981;">2</strong></td>
+            <td class="num">5</td>
+            <td class="num">2</td>
+            <td class="num">29%</td>
+            <td><span class="tier-badge tier-mid">Mid</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">96093</td>
+            <td>Trinity</td>
+            <td class="num"><strong style="color: #10B981;">2</strong></td>
+            <td class="num">1</td>
+            <td class="num">0</td>
+            <td class="num">67%</td>
+            <td><span class="tier-badge tier-low">Low Data</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">55126</td>
+            <td>Out-of-State</td>
+            <td class="num"><strong style="color: #10B981;">1</strong></td>
+            <td class="num">0</td>
+            <td class="num">0</td>
+            <td class="num">100%</td>
+            <td><span class="tier-badge tier-low">Low Data</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">90044</td>
+            <td>Los Angeles</td>
+            <td class="num"><strong style="color: #10B981;">1</strong></td>
+            <td class="num">2</td>
+            <td class="num">1</td>
+            <td class="num">33%</td>
+            <td><span class="tier-badge tier-low">Low Data</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">90220</td>
+            <td>Los Angeles</td>
+            <td class="num"><strong style="color: #10B981;">1</strong></td>
+            <td class="num">2</td>
+            <td class="num">1</td>
+            <td class="num">33%</td>
+            <td><span class="tier-badge tier-low">Low Data</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">90250</td>
+            <td>Los Angeles</td>
+            <td class="num"><strong style="color: #10B981;">1</strong></td>
+            <td class="num">2</td>
+            <td class="num">3</td>
+            <td class="num">33%</td>
+            <td><span class="tier-badge tier-low">Low Data</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">92025</td>
+            <td>San Diego</td>
+            <td class="num"><strong style="color: #10B981;">1</strong></td>
+            <td class="num">0</td>
+            <td class="num">0</td>
+            <td class="num">100%</td>
+            <td><span class="tier-badge tier-low">Low Data</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">92115</td>
+            <td>San Diego</td>
+            <td class="num"><strong style="color: #10B981;">1</strong></td>
+            <td class="num">2</td>
+            <td class="num">0</td>
+            <td class="num">33%</td>
+            <td><span class="tier-badge tier-low">Low Data</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">92117</td>
+            <td>San Diego</td>
+            <td class="num"><strong style="color: #10B981;">1</strong></td>
+            <td class="num">0</td>
+            <td class="num">0</td>
+            <td class="num">100%</td>
+            <td><span class="tier-badge tier-low">Low Data</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">92503</td>
+            <td>Riverside</td>
+            <td class="num"><strong style="color: #10B981;">1</strong></td>
+            <td class="num">0</td>
+            <td class="num">0</td>
+            <td class="num">100%</td>
+            <td><span class="tier-badge tier-low">Low Data</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">92618</td>
+            <td>Orange</td>
+            <td class="num"><strong style="color: #10B981;">1</strong></td>
+            <td class="num">3</td>
+            <td class="num">0</td>
+            <td class="num">25%</td>
+            <td><span class="tier-badge tier-low">Low Data</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">92677</td>
+            <td>Orange</td>
+            <td class="num"><strong style="color: #10B981;">1</strong></td>
+            <td class="num">1</td>
+            <td class="num">1</td>
+            <td class="num">50%</td>
+            <td><span class="tier-badge tier-low">Low Data</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">92833</td>
+            <td>Orange</td>
+            <td class="num"><strong style="color: #10B981;">1</strong></td>
+            <td class="num">0</td>
+            <td class="num">0</td>
+            <td class="num">100%</td>
+            <td><span class="tier-badge tier-low">Low Data</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">93063</td>
+            <td>Ventura</td>
+            <td class="num"><strong style="color: #10B981;">1</strong></td>
+            <td class="num">1</td>
+            <td class="num">0</td>
+            <td class="num">50%</td>
+            <td><span class="tier-badge tier-low">Low Data</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">93103</td>
+            <td>Santa Barbara</td>
+            <td class="num"><strong style="color: #10B981;">1</strong></td>
+            <td class="num">0</td>
+            <td class="num">1</td>
+            <td class="num">100%</td>
+            <td><span class="tier-badge tier-low">Low Data</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">93263</td>
+            <td>Kern</td>
+            <td class="num"><strong style="color: #10B981;">1</strong></td>
+            <td class="num">0</td>
+            <td class="num">0</td>
+            <td class="num">100%</td>
+            <td><span class="tier-badge tier-low">Low Data</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">93933</td>
+            <td>Monterey</td>
+            <td class="num"><strong style="color: #10B981;">1</strong></td>
+            <td class="num">0</td>
+            <td class="num">0</td>
+            <td class="num">100%</td>
+            <td><span class="tier-badge tier-low">Low Data</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">93950</td>
+            <td>Monterey</td>
+            <td class="num"><strong style="color: #10B981;">1</strong></td>
+            <td class="num">0</td>
+            <td class="num">0</td>
+            <td class="num">100%</td>
+            <td><span class="tier-badge tier-low">Low Data</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">94030</td>
+            <td>San Mateo</td>
+            <td class="num"><strong style="color: #10B981;">1</strong></td>
+            <td class="num">0</td>
+            <td class="num">1</td>
+            <td class="num">100%</td>
+            <td><span class="tier-badge tier-low">Low Data</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">94043</td>
+            <td>Santa Clara</td>
+            <td class="num"><strong style="color: #10B981;">1</strong></td>
+            <td class="num">0</td>
+            <td class="num">1</td>
+            <td class="num">100%</td>
+            <td><span class="tier-badge tier-low">Low Data</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">94103</td>
+            <td>San Francisco</td>
+            <td class="num"><strong style="color: #10B981;">1</strong></td>
+            <td class="num">0</td>
+            <td class="num">0</td>
+            <td class="num">100%</td>
+            <td><span class="tier-badge tier-low">Low Data</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">94114</td>
+            <td>San Francisco</td>
+            <td class="num"><strong style="color: #10B981;">1</strong></td>
+            <td class="num">2</td>
+            <td class="num">1</td>
+            <td class="num">33%</td>
+            <td><span class="tier-badge tier-low">Low Data</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">94402</td>
+            <td>San Mateo</td>
+            <td class="num"><strong style="color: #10B981;">1</strong></td>
+            <td class="num">0</td>
+            <td class="num">0</td>
+            <td class="num">100%</td>
+            <td><span class="tier-badge tier-low">Low Data</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">94404</td>
+            <td>San Mateo</td>
+            <td class="num"><strong style="color: #10B981;">1</strong></td>
+            <td class="num">0</td>
+            <td class="num">0</td>
+            <td class="num">100%</td>
+            <td><span class="tier-badge tier-low">Low Data</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">94531</td>
+            <td>Contra Costa</td>
+            <td class="num"><strong style="color: #10B981;">1</strong></td>
+            <td class="num">2</td>
+            <td class="num">0</td>
+            <td class="num">33%</td>
+            <td><span class="tier-badge tier-low">Low Data</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">94536</td>
+            <td>Alameda</td>
+            <td class="num"><strong style="color: #10B981;">1</strong></td>
+            <td class="num">8</td>
+            <td class="num">2</td>
+            <td class="num">11%</td>
+            <td><span class="tier-badge tier-mid">Mid</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">94568</td>
+            <td>Alameda</td>
+            <td class="num"><strong style="color: #10B981;">1</strong></td>
+            <td class="num">0</td>
+            <td class="num">0</td>
+            <td class="num">100%</td>
+            <td><span class="tier-badge tier-low">Low Data</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">94580</td>
+            <td>Alameda</td>
+            <td class="num"><strong style="color: #10B981;">1</strong></td>
+            <td class="num">0</td>
+            <td class="num">0</td>
+            <td class="num">100%</td>
+            <td><span class="tier-badge tier-low">Low Data</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">94620</td>
+            <td>Alameda</td>
+            <td class="num"><strong style="color: #10B981;">1</strong></td>
+            <td class="num">0</td>
+            <td class="num">0</td>
+            <td class="num">100%</td>
+            <td><span class="tier-badge tier-low">Low Data</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">94954</td>
+            <td>Sonoma</td>
+            <td class="num"><strong style="color: #10B981;">1</strong></td>
+            <td class="num">3</td>
+            <td class="num">1</td>
+            <td class="num">25%</td>
+            <td><span class="tier-badge tier-low">Low Data</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">95014</td>
+            <td>Santa Clara</td>
+            <td class="num"><strong style="color: #10B981;">1</strong></td>
+            <td class="num">3</td>
+            <td class="num">1</td>
+            <td class="num">25%</td>
+            <td><span class="tier-badge tier-low">Low Data</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">95033</td>
+            <td>Santa Cruz</td>
+            <td class="num"><strong style="color: #10B981;">1</strong></td>
+            <td class="num">1</td>
+            <td class="num">1</td>
+            <td class="num">50%</td>
+            <td><span class="tier-badge tier-low">Low Data</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">95054</td>
+            <td>Santa Clara</td>
+            <td class="num"><strong style="color: #10B981;">1</strong></td>
+            <td class="num">6</td>
+            <td class="num">0</td>
+            <td class="num">14%</td>
+            <td><span class="tier-badge tier-mid">Mid</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">95066</td>
+            <td>Santa Cruz</td>
+            <td class="num"><strong style="color: #10B981;">1</strong></td>
+            <td class="num">0</td>
+            <td class="num">0</td>
+            <td class="num">100%</td>
+            <td><span class="tier-badge tier-low">Low Data</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">95076</td>
+            <td>Santa Cruz</td>
+            <td class="num"><strong style="color: #10B981;">1</strong></td>
+            <td class="num">2</td>
+            <td class="num">0</td>
+            <td class="num">33%</td>
+            <td><span class="tier-badge tier-low">Low Data</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">95121</td>
+            <td>Santa Clara</td>
+            <td class="num"><strong style="color: #10B981;">1</strong></td>
+            <td class="num">5</td>
+            <td class="num">1</td>
+            <td class="num">17%</td>
+            <td><span class="tier-badge tier-mid">Mid</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">95129</td>
+            <td>Santa Clara</td>
+            <td class="num"><strong style="color: #10B981;">1</strong></td>
+            <td class="num">3</td>
+            <td class="num">3</td>
+            <td class="num">25%</td>
+            <td><span class="tier-badge tier-low">Low Data</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">95209</td>
+            <td>San Joaquin</td>
+            <td class="num"><strong style="color: #10B981;">1</strong></td>
+            <td class="num">2</td>
+            <td class="num">0</td>
+            <td class="num">33%</td>
+            <td><span class="tier-badge tier-low">Low Data</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">95337</td>
+            <td>San Joaquin</td>
+            <td class="num"><strong style="color: #10B981;">1</strong></td>
+            <td class="num">0</td>
+            <td class="num">0</td>
+            <td class="num">100%</td>
+            <td><span class="tier-badge tier-low">Low Data</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">95350</td>
+            <td>Stanislaus</td>
+            <td class="num"><strong style="color: #10B981;">1</strong></td>
+            <td class="num">1</td>
+            <td class="num">0</td>
+            <td class="num">50%</td>
+            <td><span class="tier-badge tier-low">Low Data</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">95355</td>
+            <td>Stanislaus</td>
+            <td class="num"><strong style="color: #10B981;">1</strong></td>
+            <td class="num">0</td>
+            <td class="num">0</td>
+            <td class="num">100%</td>
+            <td><span class="tier-badge tier-low">Low Data</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">95363</td>
+            <td>Stanislaus</td>
+            <td class="num"><strong style="color: #10B981;">1</strong></td>
+            <td class="num">0</td>
+            <td class="num">0</td>
+            <td class="num">100%</td>
+            <td><span class="tier-badge tier-low">Low Data</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">95376</td>
+            <td>San Joaquin</td>
+            <td class="num"><strong style="color: #10B981;">1</strong></td>
+            <td class="num">1</td>
+            <td class="num">1</td>
+            <td class="num">50%</td>
+            <td><span class="tier-badge tier-low">Low Data</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">95451</td>
+            <td>Lake</td>
+            <td class="num"><strong style="color: #10B981;">1</strong></td>
+            <td class="num">0</td>
+            <td class="num">0</td>
+            <td class="num">100%</td>
+            <td><span class="tier-badge tier-low">Low Data</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">95630</td>
+            <td>Sacramento</td>
+            <td class="num"><strong style="color: #10B981;">1</strong></td>
+            <td class="num">2</td>
+            <td class="num">0</td>
+            <td class="num">33%</td>
+            <td><span class="tier-badge tier-low">Low Data</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">95682</td>
+            <td>El Dorado</td>
+            <td class="num"><strong style="color: #10B981;">1</strong></td>
+            <td class="num">0</td>
+            <td class="num">0</td>
+            <td class="num">100%</td>
+            <td><span class="tier-badge tier-low">Low Data</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">95821</td>
+            <td>Sacramento</td>
+            <td class="num"><strong style="color: #10B981;">1</strong></td>
+            <td class="num">0</td>
+            <td class="num">0</td>
+            <td class="num">100%</td>
+            <td><span class="tier-badge tier-low">Low Data</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">95835</td>
+            <td>Sacramento</td>
+            <td class="num"><strong style="color: #10B981;">1</strong></td>
+            <td class="num">1</td>
+            <td class="num">1</td>
+            <td class="num">50%</td>
+            <td><span class="tier-badge tier-low">Low Data</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">96150</td>
+            <td>El Dorado</td>
+            <td class="num"><strong style="color: #10B981;">1</strong></td>
+            <td class="num">0</td>
+            <td class="num">0</td>
+            <td class="num">100%</td>
+            <td><span class="tier-badge tier-low">Low Data</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">90650</td>
+            <td>Los Angeles</td>
+            <td class="num"><strong style="color: #10B981;">0</strong></td>
+            <td class="num">1</td>
+            <td class="num">1</td>
+            <td class="num">0%</td>
+            <td><span class="tier-badge tier-low">Low Data</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">93638</td>
+            <td>Madera</td>
+            <td class="num"><strong style="color: #10B981;">0</strong></td>
+            <td class="num">0</td>
+            <td class="num">1</td>
+            <td class="num">--</td>
+            <td><span class="tier-badge tier-low">Low Data</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">95030</td>
+            <td>Santa Clara</td>
+            <td class="num"><strong style="color: #10B981;">0</strong></td>
+            <td class="num">0</td>
+            <td class="num">2</td>
+            <td class="num">--</td>
+            <td><span class="tier-badge tier-low">Low Data</span></td>
+        </tr>
+        <tr>
+            <td class="zip-monospace">95610</td>
+            <td>Sacramento</td>
+            <td class="num"><strong style="color: #10B981;">0</strong></td>
+            <td class="num">1</td>
+            <td class="num">0</td>
+            <td class="num">0%</td>
+            <td><span class="tier-badge tier-low">Low Data</span></td>
+        </tr></tbody>
+        </table>
+    </div>
+</section>
+  </main>
+</div>
+</body>
+</html>

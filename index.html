@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Farrington Insurance Agency — Reports</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --blue:#057BE5; --blue-hover:#0C6EC5; --sky:#2D90EE; --mint:#3BEECA; --mint-d:#0fae8f;
+  --navy:#00172D; --navy-2:#062c4e;
+  --ink:#0F1B2D; --body:#2B3442; --muted:#6A7482;
+  --white:#fff; --off:#F8FAFC; --gray:#EFF2F7; --divider:#EDF1F5; --line:#E2E8F0;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{-webkit-font-smoothing:antialiased;}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--gray);color:var(--body);line-height:1.55;}
+.wrap{max-width:1080px;margin:0 auto;padding:0 28px 80px;}
+
+.mast{background:var(--navy);color:#cfe0ee;border-radius:0 0 18px 18px;margin:0 -28px 40px;padding:32px 44px 38px;}
+.mast .row{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;}
+.mast .logo{height:30px;}
+.mast .meta{text-align:right;font-size:12px;color:#9fbcd6;line-height:1.6;}
+.mast .meta b{color:#fff;font-weight:600;display:block;font-size:13px;}
+.mast .eb{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--sky);margin:30px 0 10px;}
+.mast h1{font-size:34px;font-weight:900;color:#fff;letter-spacing:-.025em;line-height:1.1;}
+.mast .sub{font-size:15px;color:#a7c2da;margin-top:12px;max-width:620px;line-height:1.55;}
+
+.slab{font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.slab::after{content:"";flex:1;height:1px;background:var(--line);}
+
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+.card{display:flex;flex-direction:column;background:var(--white);border:1px solid var(--line);border-radius:14px;padding:26px 26px 24px;text-decoration:none;color:inherit;transition:transform .18s,box-shadow .18s,border-color .18s;}
+.card:hover{transform:translateY(-3px);box-shadow:0 18px 36px rgba(11,27,43,.10);border-color:var(--blue);}
+.card .chip{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--blue-hover);background:#E6F1FD;padding:5px 11px;border-radius:999px;align-self:flex-start;}
+.card .chip .dot{width:6px;height:6px;border-radius:50%;background:var(--mint);}
+.card h2{font-size:19px;font-weight:800;color:var(--ink);letter-spacing:-.015em;margin:16px 0 8px;}
+.card p{font-size:13.5px;color:var(--muted);line-height:1.55;margin-bottom:20px;}
+.card .metas{display:flex;flex-wrap:wrap;gap:16px;padding-top:16px;border-top:1px solid var(--divider);margin-top:auto;}
+.card .mi{display:flex;flex-direction:column;gap:2px;}
+.card .mi .l{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700;}
+.card .mi .v{font-size:13px;font-weight:600;color:var(--ink);}
+.card .cta{margin-top:20px;display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--blue);}
+.card .cta svg{width:14px;height:14px;transition:transform .18s;}
+.card:hover .cta svg{transform:translateX(3px);}
+
+.foot{text-align:center;margin-top:48px;font-size:12px;color:var(--muted);line-height:1.7;}
+.foot b{color:var(--body);font-weight:600;}
+
+@media(max-width:720px){ .cards{grid-template-columns:1fr;} .mast{padding:28px 24px 32px;} .mast h1{font-size:27px;} .mast .meta{text-align:left;} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="mast">
+    <div class="row">
+      <svg class="logo" viewBox="0 0 132 34" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="GOAL">
+        <circle cx="17" cy="17" r="14" stroke="#fff" stroke-width="2.4"/>
+        <circle cx="17" cy="17" r="8" stroke="#3BEECA" stroke-width="2.4"/>
+        <circle cx="17" cy="17" r="2.6" fill="#fff"/>
+        <text x="40" y="24" font-family="Inter, sans-serif" font-weight="900" font-size="23" letter-spacing="1.5" fill="#fff">GOAL</text>
+      </svg>
+      <div class="meta"><b>Farrington Insurance Agency</b>San Jose, CA · California Auto<br>Updated June 26, 2026</div>
+    </div>
+    <div class="eb">Performance Marketing</div>
+    <h1>Reports &amp; Growth Plan</h1>
+    <p class="sub">Performance reviews and targeting strategy built from your live California Auto campaign data. Open a report below.</p>
+  </div>
+
+  <div class="slab">2 reports · California Auto</div>
+
+  <div class="cards">
+
+    <a class="card" href="/farrington-client-report.html">
+      <span class="chip"><span class="dot"></span>Performance Review</span>
+      <h2>Account Performance Review</h2>
+      <p>Last-30-day results for the California Auto campaign — key metrics, lead sources, the lead funnel, and the current plan.</p>
+      <div class="metas">
+        <div class="mi"><span class="l">Updated</span><span class="v">Jun 26, 2026</span></div>
+        <div class="mi"><span class="l">Focus</span><span class="v">Results + Plan</span></div>
+        <div class="mi"><span class="l">Scope</span><span class="v">CA Auto</span></div>
+      </div>
+      <span class="cta">Open report
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+      </span>
+    </a>
+
+    <a class="card" href="/zip-code-targeting-report.html">
+      <span class="chip"><span class="dot"></span>Targeting Strategy</span>
+      <h2>Zip Code Targeting Strategy</h2>
+      <p>Zip-level tiers built from closed-policy history — where to concentrate spend across California, and which zips to exclude.</p>
+      <div class="metas">
+        <div class="mi"><span class="l">Updated</span><span class="v">Jun 26, 2026</span></div>
+        <div class="mi"><span class="l">Focus</span><span class="v">Geo Targeting</span></div>
+        <div class="mi"><span class="l">Scope</span><span class="v">CA Auto · Zip Tiers</span></div>
+      </div>
+      <span class="cta">Open report
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+      </span>
+    </a>
+
+  </div>
+
+  <div class="foot">Prepared by <b>Tom Panos</b> · GOAL Platform<br>Updated before each review.</div>
+
+</div>
+</body>
+</html>
